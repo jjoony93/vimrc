@@ -42,42 +42,77 @@ let g:prettier#config#bracket_spacing = 'true'
 let g:ycm_key_list_stop_completion = [ '<C-y>', '<Enter>' ]
 
 "lightline
-let g:lightline = {
-      \ 'colorscheme': 'powerline',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'path', 'modified' ] ]
-      \ },
-      \ 'component_function': {
-      \   'gitbranch': 'fugitive#head',
-      \   'path': 'LightLineFilename', 
-      \   'readonly': 'LightlineReadonly',
-      \   'fugitive': 'LightlineFugitive'
-      \ },
-      \ 'separator': { 'left': '⮀', 'right': '⮂' },
-      \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
-      \ }
-function! LightlineReadonly()
-  return &readonly ? '⭤' : ''
-endfunction
+"let g:lightline = {
+"      \ 'colorscheme': 'powerline',
+"      \ 'active': {
+"      \   'left': [ [ 'mode', 'paste' ],
+"      \             [ 'gitbranch', 'readonly', 'filename', 'path', 'modified' ] ]
+"      \ },
+"      \ 'component_function': {
+"      \   'gitbranch': 'fugitive#head',
+"      \   'path': 'LightLineFilename', 
+"      \   'readonly': 'LightlineReadonly',
+"      \   'fugitive': 'LightlineFugitive'
+"      \ },
+"      \ 'separator': { 'left': '⮀', 'right': '⮂' },
+"      \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
+"      \ }
+"function! LightlineReadonly()
+"  return &readonly ? '⭤' : ''
+"endfunction
 
+"function! LightlineFugitive()
+"  if exists('*fugitive#head')
+"    let branch = fugitive#head()
+"    return branch !=# '' ? '⭠ '.branch : ''
+"  endif
+"  return ''
+"endfunction
+""absolute path
+"" function! LightLineFilename()
+""   return expand('%:p:h')
+"" endfunction
+
+""relative path
+"function! LightLineFilename()
+"  return expand('%')
+"endfunction
+let g:lightline = {
+  \ 'colorscheme': 'powerline',
+  \ 'active': {
+  \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], [ 'relativepath' ]],
+  \   'right': [ [ 'lineinfo' ],
+  \            [ 'percent' ],
+  \            [ 'fileformat', 'fileencoding', 'filetype' ] ] 
+  \ },
+  \ 'component_function': {
+  \   'fugitive': 'LightlineFugitive',
+  \   'filename': 'LightlineFilename'
+  \ },
+  \ 'separator': { 'left': '⮀', 'right': '⮂' },
+  \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
+  \ }
+function! LightlineModified()
+  return &ft =~ 'help\|vimfiler' ? '' : &modified ? '+' : &modifiable ? '' : '-'
+endfunction
+function! LightlineReadonly()
+  return &ft !~? 'help\|vimfiler' && &readonly ? '⭤' : ''
+endfunction
+function! LightlineFilename()
+  return ('' != LightlineReadonly() ? LightlineReadonly() . ' ' : '') .
+  \ (&ft == 'vimfiler' ? vimfiler#get_status_string() :
+  \  &ft == 'unite' ? unite#get_status_string() :
+  \  &ft == 'vimshell' ? vimshell#get_status_string() :
+  \ '' != expand('%:t') ? expand('%:t') : '') .
+  \ ('' != LightlineModified() ? ' ' . LightlineModified() : '')
+endfunction
 function! LightlineFugitive()
-  if exists('*fugitive#head')
+  if &ft !~? 'vimfiler' && exists('*fugitive#head')
     let branch = fugitive#head()
     return branch !=# '' ? '⭠ '.branch : ''
   endif
   return ''
 endfunction
-"absolute path
-" function! LightLineFilename()
-"   return expand('%:p:h')
-" endfunction
-
-"relative path
-function! LightLineFilename()
-  return expand('%')
-endfunction
-
 se bg=dark
 silent! colorscheme solarized
 
