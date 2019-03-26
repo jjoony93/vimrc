@@ -46,12 +46,37 @@ let g:lightline = {
       \ 'colorscheme': 'powerline',
       \ 'active': {
       \   'left': [ [ 'mode', 'paste' ],
-      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \             [ 'gitbranch', 'readonly', 'filename', 'path', 'modified' ] ]
       \ },
       \ 'component_function': {
-      \   'gitbranch': 'fugitive#head'
+      \   'gitbranch': 'fugitive#head',
+      \   'path': 'LightLineFilename', 
+      \   'readonly': 'LightlineReadonly',
+      \   'fugitive': 'LightlineFugitive'
       \ },
+      \ 'separator': { 'left': '⮀', 'right': '⮂' },
+      \ 'subseparator': { 'left': '⮁', 'right': '⮃' }
       \ }
+function! LightlineReadonly()
+  return &readonly ? '⭤' : ''
+endfunction
+
+function! LightlineFugitive()
+  if exists('*fugitive#head')
+    let branch = fugitive#head()
+    return branch !=# '' ? '⭠ '.branch : ''
+  endif
+  return ''
+endfunction
+"absolute path
+" function! LightLineFilename()
+"   return expand('%:p:h')
+" endfunction
+
+"relative path
+function! LightLineFilename()
+  return expand('%')
+endfunction
 
 se bg=dark
 silent! colorscheme solarized
