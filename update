@@ -1,0 +1,4 @@
+#!/bin/bash
+cd "$HOME/.vim"
+vim +PlugUpdate +PlugUpgrade +qa
+git add ./autoload && git commit -m 'Bump vim-plug' && git push
