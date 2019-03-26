@@ -40,7 +40,17 @@ let g:prettier#config#bracket_spacing = 'true'
 "youcompleteme
 let g:ycm_key_list_stop_completion = [ '<C-y>', '<Enter>' ]
 
-
+"lightline
+let g:lightline = {
+      \ 'colorscheme': 'powerline',
+      \ 'active': {
+      \   'left': [ [ 'mode', 'paste' ],
+      \             [ 'gitbranch', 'readonly', 'filename', 'modified' ] ]
+      \ },
+      \ 'component_function': {
+      \   'gitbranch': 'fugitive#head'
+      \ },
+      \ }
 
 se bg=dark
 silent! colorscheme solarized
