@@ -21,8 +21,15 @@ Plug 'tpope/vim-apathy'
 Plug 'valloric/youcompleteme'
 Plug 'itchyny/lightline.vim'
 Plug 'airblade/vim-gitgutter'
-Plug 'w0rp/ale', { 'for': 'javascript' }
+Plug 'w0rp/ale'
 call plug#end()
+let g:ale_fixers = {
+\'javascript': ['prettier'],
+\'typescript': ['prettier', 'eslint'],
+\}
+let g:ale_fix_on_save = 1
+let g:ale_sign_error = '❌'
+let g:ale_sign_warning = '⚠️'
 
 "prettier
 "au BufWritePre *.js,*.json,*.html,*.tsx,*.ts Prettier
@@ -83,7 +90,7 @@ let g:lightline = {
   \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], [ 'relativepath' ]],
   \   'right': [ [ 'lineinfo' ],
   \            [ 'percent' ],
-  \            [ 'fileformat', 'fileencoding', 'filetype' ] ] 
+  \            [ 'filetype' ] ] 
   \ },
   \ 'component_function': {
   \   'fugitive': 'LightlineFugitive',
