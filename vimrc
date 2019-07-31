@@ -17,7 +17,7 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-apathy'
-Plug 'valloric/youcompleteme'
+Plug 'valloric/youcompleteme', {'for': ['javascript', 'typescript']}
 Plug 'itchyny/lightline.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'w0rp/ale'
