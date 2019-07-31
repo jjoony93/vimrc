@@ -117,7 +117,6 @@ se softtabstop=2
 se visualbell
 set guitablabel=\[%N\]\ %t\ %M
 set splitbelow
-set termwinsize =15x0
 set noimd
 set ignorecase
 set smartcase
