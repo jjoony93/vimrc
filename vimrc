@@ -2,7 +2,7 @@ call plug#begin()
 Plug '/usr/local/opt/fzf'
 Plug 'altercation/vim-colors-solarized'
 Plug 'ambv/black', { 'for': 'python' }
-Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf.vim', { 'do': { -> fzf#install() } }
 Plug 'leafgarland/typescript-vim'
 Plug 'mxw/vim-jsx'
 Plug 'pangloss/vim-javascript'
@@ -17,7 +17,7 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-apathy'
-Plug 'valloric/youcompleteme', {'do': './install.py --clang-completer', 'for': ['javascript', 'typescript']}
+" Plug 'valloric/youcompleteme', {'do': './install.py --clang-completer', 'for': ['javascript', 'typescript']}
 Plug 'itchyny/lightline.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'dense-analysis/ale'
@@ -32,6 +32,8 @@ let g:ale_fixers = {
 let g:ale_fix_on_save = 1
 let g:ale_sign_error = '❌'
 let g:ale_sign_warning = '⚠️'
+let g:ale_completion_enabled = 1
+let g:ale_completion_autoimport = 1
 "prettier
 "au BufWritePre *.js,*.json,*.html,*.tsx,*.ts Prettier
 au BufWritePre *.py Black
@@ -50,10 +52,21 @@ let g:prettier#config#config_precedence = 'prefer-file'
 "youcompleteme
 let g:ycm_key_list_stop_completion = [ '<C-y>', '<Enter>' ]
 
+"fzf
+" command! -bang -nargs=* Rg call fzf#vim#grep("rg --column --line-number --no-heading --color=always --smart-case ".shellescape(<q-args>), 1, {'options': '--delimiter : --nth 4..'}, <bang>0)
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview({'options': '--delimiter : --nth 4..'}, 'up:60%'), <bang>0)
+
+command! -bang -nargs=? -complete=dir Files
+    \ call fzf#vim#files(<q-args>, fzf#vim#with_preview({'options': ['--layout=reverse', '--info=inline']}), <bang>0)
+
+
 let g:lightline = {
   \ 'colorscheme': 'powerline',
   \ 'active': {
-  \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], [ 'relativepath' ]],
+  \   'left': [ [ 'mode', 'paste' ], [ 'fugitive', 'filename' ], [ 'absolutepath' ]],
   \   'right': [ [ 'lineinfo' ],
   \            [ 'percent' ],
   \            [ 'filetype' ] ] 
@@ -96,7 +109,8 @@ nnoremap <leader>f :Files<cr>
 nnoremap <leader>F :Files ~<cr>
 nnoremap <leader>s :Vex<cr>
 nnoremap <leader>b :Buffers<cr>
-nnoremap <leader>r :Rg<cr>
+nnoremap <leader>r :Rg!<cr>
+nnoremap <leader>R :Rg<cr>
 nnoremap <leader>e :Lexplore<cr>
 nnoremap <leader>w <C-w><C-w>
 nnoremap <leader>h <C-w>h
@@ -123,7 +137,7 @@ set splitbelow
 set noimd
 set ignorecase
 set smartcase
-set autochdir
+" set autochdir
 augroup dynamic_smartcase
     autocmd!
     autocmd CmdLineEnter : set nosmartcase
